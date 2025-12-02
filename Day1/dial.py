@@ -3,16 +3,17 @@ class Dial:
         self.location = init_location
 
 
-    def turn(self,rotation: str):
+    def turn(self,rotation: str) -> int:
+        past_zero = 0
         if(rotation.startswith("L")):
-            self.turnLeft(int(rotation[1:]))
+            past_zero += self.slowTurnLeft(int(rotation[1:]))
         if(rotation.startswith("R")):
-            self.turnRight(int(rotation[1:]))
+            past_zero += self.slowTurnRight(int(rotation[1:]))
         
-        return
+        return past_zero
 
     def turnLeft(self,rotation: int):
-        self.location -= rotation
+        self.location  = (self.location  - rotation) % 100
         while (self.location < 0):
             self.location += 100
         return
@@ -22,3 +23,21 @@ class Dial:
         while (self.location > 99):
             self.location -= 100
         return
+    
+    def slowTurnLeft(self,rotation:int) -> int:
+        past_zero = 0
+        for i in range(rotation):
+            self.location -=1
+            self.location = self.location % 100
+            if self.location == 0:
+                past_zero += 1
+        return past_zero
+
+    def slowTurnRight(self,rotation:int) -> int:
+        past_zero = 0
+        for i in range(rotation):
+            self.location +=1
+            self.location = self.location % 100
+            if self.location == 0:
+                past_zero += 1
+        return past_zero
